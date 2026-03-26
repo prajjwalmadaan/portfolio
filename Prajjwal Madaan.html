@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prajjwal Madaan — Aspiring Airline Pilot</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg:       #07090e;
+  --bg2:      #0b0f1a;
+  --bg3:      #0f1520;
+  --surf:     #121826;
+  --surf2:    #182030;
+  --gold:     #c9a84c;
+  --gold2:    #e2c06a;       /* slightly warmer, better contrast */
+  --gold3:    #f0d48a;       /* light accent for headings */
+  --gold-d:   rgba(201,168,76,0.12);
+  --gold-d2:  rgba(201,168,76,0.06);
+  --teal:     #00c9a9;       /* slightly muted — calmer, still readable */
+  --teal-l:   #00e5c0;       /* hover / highlight teal */
+  --teal-d:   rgba(0,201,169,0.10);
+  --blue:     #3a6db5;
+  --blue-l:   #7baee8;       /* title accent — enough contrast on dark bg */
+  --txt:      #dde0ea;       /* slightly softer than pure white */
+  --txt-m:    #7e8898;       /* muted — passes AA on --surf */
+  --txt-s:    #a8b0be;       /* secondary — between muted and main */
+  --txt-d:    #384055;       /* dim — decorative only, never body copy */
+  --bdr:      rgba(201,168,76,0.13);
+  --bdr2:     rgba(255,255,255,0.06);
+  --bdr3:     rgba(255,255,255,0.10);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--txt);
+  overflow-x:hidden;line-height:1.7;cursor:none;
+}
+
+/* ── NOISE TEXTURE ── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.5;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cur{
+  width:8px;height:8px;background:var(--teal-l);
+  border-radius:50%;position:fixed;top:0;left:0;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform .14s ease,background .22s;
+  mix-blend-mode:difference;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 4rem;
+  background:rgba(7,9,14,.9);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bdr);
+  transition:border-color .35s,background .35s;
+}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.32rem;font-weight:500;letter-spacing:.04em;color:var(--txt);
+}
+.nav-logo span{color:var(--gold)}
+
+/* ICAO-style registration in nav centre */
+.nav-reg{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-family:'Space Mono',monospace;
+  font-size:.6rem;letter-spacing:.22em;color:var(--txt-d);
+  text-transform:uppercase;border:1px solid var(--bdr2);
+  padding:.25rem .75rem;
+}
+
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  text-decoration:none;color:var(--txt-m);
+  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--gold2)}
+
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:0;
+  padding:0 4rem;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 70% at 70% 42%, rgba(58,109,181,.08) 0%,transparent 65%),
+    radial-gradient(ellipse 60% 50% at 15% 80%, rgba(201,168,76,.05) 0%,transparent 55%),
+    linear-gradient(168deg,#07090e 0%,#09101e 55%,#07090e 100%);
+}
+
+/* Instrument strip — vertical right edge */
+.hero-instr{
+  position:absolute;right:0;top:0;bottom:0;width:68px;
+  border-left:1px solid rgba(201,168,76,.08);
+  display:flex;flex-direction:column;justify-content:center;gap:1.4rem;
+  padding:0 .9rem;pointer-events:none;
+}
+.instr-item{
+  font-family:'Space Mono',monospace;font-size:.52rem;
+  letter-spacing:.18em;color:rgba(201,168,76,.28);
+  writing-mode:vertical-rl;text-orientation:mixed;
+}
+.instr-val{color:rgba(0,201,169,.32);margin-top:.3rem;display:block}
+
+/* Horizon glow */
+.hero-horizon{
+  position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold) 50%,transparent);
+  opacity:.18;
+}
+
+/* Runway lines */
+.runway{position:absolute;bottom:0;right:0;width:50%;height:100%;pointer-events:none;overflow:hidden}
+.rl{position:absolute;width:1px;height:100%;
+  background:linear-gradient(180deg,transparent,rgba(201,168,76,.11) 55%,transparent);}
+.rl:nth-child(1){left:12%;animation:rglow 6s ease-in-out infinite}
+.rl:nth-child(2){left:45%;animation:rglow 6s 2s ease-in-out infinite;opacity:.5}
+.rl:nth-child(3){left:78%;animation:rglow 6s 4s ease-in-out infinite;opacity:.25}
+@keyframes rglow{0%,100%{opacity:.08}50%{opacity:.4}}
+
+/* Speed tape — decorative left edge */
+.speed-tape{
+  position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,transparent,var(--gold) 40%,var(--teal) 60%,transparent);
+  opacity:.18;
+}
+
+/* HERO LEFT */
+.hero-left{position:relative;z-index:2}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:.85rem;margin-bottom:1.5rem;
+  opacity:0;animation:fup .9s .1s ease forwards;
+}
+.hero-eyebrow::before{content:'';width:2rem;height:1px;background:var(--gold);opacity:.7}
+.hero-lbl{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--gold2);
+}
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(4rem,7.5vw,7.2rem);
+  font-weight:300;line-height:.93;color:var(--txt);
+  opacity:0;animation:fup .9s .2s ease forwards;
+  margin-bottom:.6rem;
+}
+.hero-name em{font-style:italic;color:var(--gold3)}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.1rem,2.2vw,1.65rem);
+  letter-spacing:.34em;color:var(--blue-l);
+  margin-bottom:1.8rem;
+  opacity:0;animation:fup .9s .3s ease forwards;
+}
+.hero-desc{
+  font-size:.93rem;color:var(--txt-s);
+  max-width:460px;line-height:1.95;font-weight:300;
+  margin-bottom:2.2rem;
+  opacity:0;animation:fup .9s .4s ease forwards;
+}
+.hero-ctas{
+  display:flex;gap:.85rem;flex-wrap:wrap;
+  opacity:0;animation:fup .9s .5s ease forwards;
+}
+
+/* checklist badge row */
+.hero-checks{
+  display:flex;gap:1.4rem;margin-top:2rem;
+  opacity:0;animation:fup .9s .65s ease forwards;
+}
+.hcheck{
+  display:flex;align-items:center;gap:.4rem;
+  font-family:'Space Mono',monospace;font-size:.58rem;
+  letter-spacing:.1em;color:var(--txt-m);
+}
+.hcheck-box{
+  width:10px;height:10px;border:1px solid var(--teal);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.hcheck-box::after{content:'✓';font-size:.45rem;color:var(--teal);line-height:1}
+
+@keyframes fup{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO RIGHT — Pilot SVG */
+.hero-right{
+  position:relative;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+}
+.pilot-wrap{
+  position:relative;width:340px;height:440px;
+}
+.pilot-glow{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:280px;height:70px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(201,168,76,.18) 0%,transparent 70%);
+  filter:blur(18px);
+}
+.pilot-float{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  animation:float 4.5s ease-in-out infinite;
+  filter:drop-shadow(0 12px 28px rgba(0,0,0,.5));
+}
+@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-14px)}}
+
+/* Instrument gauge overlays around pilot */
+.gauge{
+  position:absolute;
+  font-family:'Space Mono',monospace;font-size:.52rem;
+  letter-spacing:.1em;color:rgba(201,168,76,.45);
+  border:1px solid rgba(201,168,76,.18);
+  padding:.28rem .55rem;background:rgba(7,9,14,.8);
+}
+.g1{top:18%;left:-10%}
+.g2{top:30%;right:-8%}
+.g3{bottom:35%;left:-14%}
+.g4{bottom:22%;right:-6%}
+.gauge-val{display:block;color:rgba(0,201,169,.6);font-size:.6rem;margin-top:.1rem}
+
+/* Scroll hint */
+.scroll-hint{
+  position:absolute;bottom:2rem;left:4rem;
+  display:flex;align-items:center;gap:.7rem;
+  opacity:0;animation:fup .9s .9s ease forwards;
+}
+.scroll-line{width:1px;height:2.6rem;
+  background:linear-gradient(180deg,var(--gold),transparent);
+  animation:spulse 2.4s ease-in-out infinite;}
+@keyframes spulse{0%,100%{opacity:.2}50%{opacity:.9}}
+.scroll-txt{
+  font-family:'Space Mono',monospace;font-size:.56rem;
+  letter-spacing:.22em;color:var(--gold);writing-mode:vertical-lr;
+}
+
+/* ── BUTTONS ── */
+.btn-p{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.8rem 1.8rem;background:var(--gold);color:#06080c;
+  border:none;font-family:'DM Sans',sans-serif;
+  font-size:.72rem;font-weight:500;letter-spacing:.11em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;transition:all .28s;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.btn-p:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.28)}
+
+.btn-o{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.8rem 1.8rem;background:transparent;color:var(--teal-l);
+  border:1px solid rgba(0,201,169,.35);
+  font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:400;
+  letter-spacing:.11em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;transition:all .28s;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.btn-o:hover{background:var(--teal-d);border-color:var(--teal-l);transform:translateY(-2px)}
+
+.btn-g{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.8rem 1.8rem;background:transparent;color:var(--txt-s);
+  border:1px solid var(--bdr2);
+  font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:400;
+  letter-spacing:.11em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;transition:all .28s;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.btn-g:hover{border-color:var(--gold);color:var(--gold2);background:var(--gold-d)}
+
+/* ── MARQUEE ── */
+.mq-wrap{
+  overflow:hidden;white-space:nowrap;
+  background:#05070c;
+  border-top:1px solid rgba(201,168,76,.18);
+  border-bottom:1px solid rgba(201,168,76,.18);
+  position:relative;z-index:1;
+}
+.mq-track{display:inline-flex;animation:mqroll 30s linear infinite}
+.mq-track:hover{animation-play-state:paused}
+@keyframes mqroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.mqi{
+  display:inline-flex;align-items:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.1rem;letter-spacing:.07em;
+  padding:.55rem 1.4rem;
+  color:rgba(221,224,234,.72);
+}
+.mqi.gold{color:var(--gold2)}
+.mqi.teal{color:var(--teal-l);opacity:.9}
+.mq-sep{
+  display:inline-flex;align-items:center;
+  padding:0 .3rem;color:var(--gold);opacity:.55;font-size:1rem;
+}
+
+/* ── STATS ── */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--bdr2);
+  border-top:1px solid var(--bdr2);border-bottom:1px solid var(--bdr2);
+}
+.stat-box{
+  background:var(--bg2);padding:2.1rem 1.6rem;text-align:center;
+  position:relative;overflow:hidden;transition:background .25s;
+}
+.stat-box::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .4s;
+}
+.stat-box:hover{background:var(--surf)}
+.stat-box:hover::after{transform:scaleX(1)}
+.stat-num{
+  display:block;font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-weight:300;color:var(--gold2);
+  line-height:1;margin-bottom:.3rem;
+}
+.stat-lbl{
+  font-family:'Space Mono',monospace;
+  font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-m);
+}
+
+/* ── SECTION SHELL ── */
+section{padding:5.5rem 4rem;position:relative;z-index:1}
+.sec-inner{max-width:1080px;margin:0 auto}
+.sec-hdr{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:2rem;margin-bottom:3rem;
+}
+.sec-lbl{
+  font-family:'Space Mono',monospace;
+  font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:.4rem;
+}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.1rem,3.8vw,2.9rem);font-weight:400;
+  line-height:1.05;color:var(--txt);
+}
+.sec-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--bdr),transparent);max-width:180px;margin-bottom:.35rem}
+
+/* ── ABOUT — redesigned ── */
+.about-bg{background:linear-gradient(172deg,var(--bg) 0%,var(--bg2) 45%,var(--bg) 100%)}
+
+.about-grid{
+  display:grid;grid-template-columns:1fr 1.1fr;gap:4rem;align-items:start;
+}
+
+/* Left: profile card + quote */
+.about-profile-card{
+  background:var(--surf);border:1px solid var(--bdr);
+  padding:2.2rem;position:relative;overflow:hidden;
+}
+.about-profile-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--teal),transparent);
+}
+/* Cockpit checklist style rows */
+.profile-rows{display:flex;flex-direction:column;gap:0}
+.profile-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:.8rem 0;
+  border-bottom:1px solid var(--bdr2);
+  gap:1rem;
+}
+.profile-row:last-child{border-bottom:none;padding-bottom:0}
+.pr-key{
+  font-family:'Space Mono',monospace;font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--txt-m);
+  flex-shrink:0;
+}
+.pr-val{font-size:.84rem;color:var(--txt-s);text-align:right;line-height:1.5}
+.pr-val strong{color:var(--txt);font-weight:500}
+.pr-val.green{color:var(--teal-l)}
+
+/* Callsign / ID badge */
+.callsign-badge{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:1.6rem;padding-bottom:1.4rem;
+  border-bottom:1px solid var(--bdr);
+}
+.callsign-avatar{
+  width:52px;height:52px;background:var(--gold-d);border:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;
+  color:var(--gold2);
+}
+.callsign-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:500;color:var(--txt)}
+.callsign-sub{
+  font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--teal);margin-top:.15rem;
+}
+
+/* Right: summary + pilot philosophy */
+.about-right{}
+.about-lead{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.45rem;font-weight:300;font-style:italic;
+  line-height:1.55;color:var(--txt-s);
+  border-left:2px solid var(--gold);padding-left:1.2rem;
+  margin-bottom:1.8rem;
+}
+.about-body{font-size:.91rem;color:var(--txt-m);line-height:1.95;font-weight:300}
+.about-body p+p{margin-top:1rem}
+.about-body strong{color:var(--txt-s);font-weight:500}
+
+/* Pilot philosophy row */
+.philosophy-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--bdr2);margin-top:2rem;border:1px solid var(--bdr2);
+}
+.phil-item{
+  background:var(--surf);padding:1.1rem 1.2rem;
+  text-align:center;transition:background .22s;
+}
+.phil-item:hover{background:var(--surf2)}
+.phil-num{
+  font-family:'Bebas Neue',sans-serif;font-size:1.6rem;
+  color:var(--gold);line-height:1;display:block;margin-bottom:.2rem;
+}
+.phil-lbl{font-size:.7rem;color:var(--txt-m);letter-spacing:.06em}
+
+/* ── ACADEMICS ── */
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-bottom:2.5rem}
+.score-blk{
+  background:var(--surf);border:1px solid var(--bdr2);
+  padding:2.1rem 1.7rem;text-align:center;
+  position:relative;overflow:hidden;transition:all .35s;
+}
+.score-blk::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .4s;
+}
+.score-blk:hover{transform:translateY(-4px);box-shadow:0 16px 42px rgba(0,0,0,.35)}
+.score-blk:hover::after{transform:scaleX(1)}
+.score-pct{
+  font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;
+  color:var(--gold2);line-height:1;margin-bottom:.4rem;
+}
+.score-sub{font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-m);margin-bottom:.2rem}
+.score-name{font-size:.86rem;color:var(--txt-s)}
+
+.subj-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem}
+.subj-tag{
+  padding:.42rem 1rem;border:1px solid var(--bdr);
+  background:var(--surf);font-size:.72rem;color:var(--txt-m);
+  letter-spacing:.07em;transition:all .22s;
+}
+.subj-tag:hover{border-color:var(--gold);color:var(--gold2);background:var(--gold-d)}
+
+/* ── AVIATION PREP ── */
+.cert-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.7rem}
+.cert-card{
+  background:var(--surf);border:1px solid var(--bdr);
+  padding:2.2rem;position:relative;overflow:hidden;transition:all .35s;
+}
+.cert-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.cert-card:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.36)}
+.cert-card:hover::before{opacity:1}
+.cert-icon-wrap{
+  width:2.8rem;height:2.8rem;background:var(--gold-d);
+  border:1px solid var(--bdr);display:flex;align-items:center;
+  justify-content:center;font-size:1.3rem;margin-bottom:1.2rem;
+}
+.cert-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;
+  color:var(--txt);margin-bottom:.6rem;
+}
+.cert-body{font-size:.82rem;color:var(--txt-m);line-height:1.85}
+.cert-badge{
+  display:inline-flex;align-items:center;gap:.35rem;margin-top:1rem;
+  padding:.28rem .75rem;
+  background:rgba(0,201,169,.09);border:1px solid rgba(0,201,169,.25);
+  font-family:'Space Mono',monospace;font-size:.58rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--teal-l);
+}
+
+/* Exam info panel */
+.exam-panel{
+  margin-top:2rem;background:var(--surf);border:1px solid var(--bdr2);
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.ep-item{
+  padding:1.1rem 1.3rem;border-right:1px solid var(--bdr2);text-align:center;
+}
+.ep-item:last-child{border-right:none}
+.ep-val{
+  font-family:'Space Mono',monospace;font-size:.9rem;color:var(--gold2);
+  display:block;margin-bottom:.25rem;
+}
+.ep-lbl{font-size:.65rem;color:var(--txt-m);letter-spacing:.08em}
+
+/* ── HIGHLIGHTS ── */
+.hl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem}
+.hl-card{
+  background:var(--surf);border:1px solid var(--bdr2);
+  padding:1.8rem 1.6rem;position:relative;overflow:hidden;transition:all .3s;
+}
+.hl-card::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--gold),var(--teal));
+  transform:scaleY(0);transform-origin:top;transition:transform .35s;
+}
+.hl-card:hover{transform:translateY(-4px);box-shadow:0 16px 42px rgba(0,0,0,.3)}
+.hl-card:hover::after{transform:scaleY(1)}
+.hl-icon{font-size:1.5rem;margin-bottom:.85rem;display:block}
+.hl-title{font-size:.93rem;color:var(--txt);font-weight:500;margin-bottom:.4rem}
+.hl-desc{font-size:.78rem;color:var(--txt-m);line-height:1.78}
+
+/* ── ACCORDION SKILLS ── */
+.skills-bg{background:var(--bg2)}
+.accordion{display:flex;flex-direction:column;gap:2px}
+.acc-item{
+  background:var(--surf);border:1px solid var(--bdr2);
+  position:relative;overflow:hidden;
+}
+.acc-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--gold),var(--teal));
+  transform:scaleY(0);transition:transform .3s;
+}
+.acc-item.open::before,.acc-item:hover::before{transform:scaleY(1)}
+.acc-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.4rem 1.8rem;cursor:pointer;transition:background .22s;
+  user-select:none;
+}
+.acc-hdr:hover{background:rgba(255,255,255,.025)}
+.acc-left{display:flex;align-items:center;gap:1.3rem}
+.acc-num{
+  font-family:'Space Mono',monospace;font-size:.65rem;
+  color:var(--teal-l);opacity:.6;flex-shrink:0;
+}
+.acc-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.38rem;letter-spacing:.05em;color:var(--txt);
+}
+.acc-right{display:flex;align-items:center;gap:1rem}
+.acc-tags{display:flex;gap:.45rem;flex-wrap:wrap}
+.acc-tag{
+  font-size:.6rem;padding:.24rem .65rem;
+  border:1px solid var(--bdr2);border-radius:20px;
+  color:var(--txt-m);font-family:'Space Mono',monospace;letter-spacing:.06em;
+}
+.acc-plus{
+  font-size:1.25rem;color:var(--txt-d);
+  transition:transform .3s,color .3s;flex-shrink:0;width:1.4rem;text-align:center;
+}
+.acc-item.open .acc-plus{transform:rotate(45deg);color:var(--teal-l)}
+.acc-item.open .acc-hdr{border-bottom:1px solid var(--bdr2)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1)}
+.acc-body-inner{
+  padding:1.2rem 1.8rem 1.4rem;
+  font-size:.84rem;color:var(--txt-m);line-height:1.88;
+}
+.acc-body-inner strong{color:var(--txt-s);font-weight:500}
+
+/* ── INTERESTS ── */
+.int-wrap{display:flex;flex-wrap:wrap;gap:.85rem;justify-content:center}
+.int-pill{
+  padding:.65rem 1.55rem;border:1px solid var(--bdr);
+  background:var(--surf);font-size:.78rem;
+  letter-spacing:.06em;color:var(--txt-m);transition:all .24s;cursor:default;
+}
+.int-pill:hover{border-color:var(--gold);color:var(--gold2);background:var(--gold-d);transform:translateY(-3px)}
+
+/* ── PILOT PANEL — new section ── */
+/* A cockpit-inspired data panel showing flight-relevant attributes */
+.pilot-panel-bg{background:var(--bg2)}
+.pilot-panel{
+  border:1px solid var(--bdr);background:var(--surf);
+  overflow:hidden;
+}
+.pp-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1.6rem;
+  background:rgba(201,168,76,.06);
+  border-bottom:1px solid var(--bdr);
+}
+.pp-title{
+  font-family:'Space Mono',monospace;font-size:.62rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+}
+.pp-status{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:'Space Mono',monospace;font-size:.56rem;
+  letter-spacing:.12em;color:var(--teal-l);
+}
+.pp-dot{width:5px;height:5px;border-radius:50%;background:var(--teal-l);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.pp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bdr2)}
+.pp-cell{
+  background:var(--surf);padding:1.4rem 1.3rem;
+  text-align:center;transition:background .22s;position:relative;
+}
+.pp-cell:hover{background:var(--surf2)}
+.pp-cell-top{
+  font-family:'Space Mono',monospace;font-size:.52rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--txt-d);
+  margin-bottom:.6rem;
+}
+.pp-cell-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem;letter-spacing:.05em;color:var(--txt-s);
+  line-height:1;margin-bottom:.3rem;
+}
+.pp-cell-val.gold{color:var(--gold2)}
+.pp-cell-val.teal{color:var(--teal-l)}
+.pp-cell-sub{font-size:.65rem;color:var(--txt-m);letter-spacing:.04em}
+.pp-row2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bdr2);border-top:1px solid var(--bdr2)}
+.pp-row2-cell{
+  background:var(--surf);padding:1.2rem 1.6rem;
+  display:flex;align-items:center;gap:1rem;
+  transition:background .22s;
+}
+.pp-row2-cell:hover{background:var(--surf2)}
+.pp-r2-icon{font-size:1.2rem;flex-shrink:0;opacity:.7}
+.pp-r2-key{font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--txt-d);margin-bottom:.2rem}
+.pp-r2-val{font-size:.84rem;color:var(--txt-s)}
+
+/* ── DIGITAL ── */
+.digital-wrap{
+  display:grid;grid-template-columns:auto 1fr;
+  gap:2.6rem;align-items:start;
+  background:var(--surf);border:1px solid var(--bdr);padding:2.6rem;max-width:800px;
+}
+.digital-icon{font-size:2.5rem;display:block;margin-bottom:.8rem}
+.digital-lbl{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.digital-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--txt);margin:.38rem 0 .85rem}
+.digital-desc{font-size:.83rem;color:var(--txt-m);line-height:1.88}
+.digital-tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.2rem}
+.dtag{
+  padding:.25rem .7rem;background:var(--bg);
+  border:1px solid var(--bdr2);font-size:.64rem;
+  color:var(--txt-m);letter-spacing:.07em;
+}
+
+/* ── CONTACT ── */
+.contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:4.5rem;align-items:start}
+.contact-intro{
+  font-family:'Cormorant Garamond',serif;font-size:1.7rem;
+  font-weight:300;line-height:1.4;color:var(--txt);margin-bottom:1.2rem;
+}
+.contact-intro em{font-style:italic;color:var(--gold3)}
+.contact-sub{font-size:.87rem;color:var(--txt-m);line-height:1.88;font-weight:300;max-width:360px}
+.contact-ctas{display:flex;gap:.85rem;flex-wrap:wrap;margin-top:1.7rem}
+.contact-items{display:flex;flex-direction:column;gap:.95rem}
+.ci{
+  display:flex;align-items:center;gap:.9rem;
+  padding:1rem 1.3rem;background:var(--surf);
+  border:1px solid var(--bdr2);transition:all .25s;
+  text-decoration:none;color:inherit;
+}
+.ci:hover{border-color:var(--gold);background:var(--gold-d);transform:translateX(5px)}
+.ci-icon{
+  width:2.2rem;height:2.2rem;background:var(--gold-d);border:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;
+}
+.ci-lbl{font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.1rem}
+.ci-val{font-size:.85rem;color:var(--txt-s)}
+
+/* ── FOOTER ── */
+footer{
+  padding:1.7rem 4rem;border-top:1px solid var(--bdr2);
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;z-index:1;
+}
+.ft-l{font-size:.68rem;color:var(--txt-d)}
+.ft-l strong{color:var(--txt-m)}
+.ft-r{font-family:'Cormorant Garamond',serif;font-size:.86rem;font-style:italic;color:var(--txt-d)}
+
+/* ── DIVIDER ── */
+.dvd{height:1px;background:linear-gradient(90deg,transparent,var(--bdr),transparent);position:relative;z-index:1}
+
+/* ── REVEAL ── */
+.r{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.r.v{opacity:1;transform:translateY(0)}
+.r.d1{transition-delay:.1s}.r.d2{transition-delay:.2s}
+.r.d3{transition-delay:.3s}.r.d4{transition-delay:.4s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;padding:6rem 2rem 4rem}
+  .hero-right{display:none}
+  .hero-instr{display:none}
+  nav{padding:1rem 2rem}
+  .nav-reg{display:none}
+  section{padding:3.8rem 2rem}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem}
+  .score-grid{grid-template-columns:1fr 1fr}
+  .cert-grid,.hl-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .pp-grid{grid-template-columns:1fr 1fr}
+  .pp-row2{grid-template-columns:1fr}
+  .digital-wrap{grid-template-columns:1fr;gap:1.3rem;padding:1.7rem}
+  footer{flex-direction:column;gap:.5rem;text-align:center;padding:1.5rem 2rem}
+  .acc-tags{display:none}
+}
+@media(max-width:540px){
+  .score-grid,.stats-row,.pp-grid,.philosophy-row{grid-template-columns:1fr}
+  .hero-ctas,.contact-ctas{flex-direction:column}
+  .cert-grid{grid-template-columns:1fr}
+  .exam-panel{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- ══════════════════════ NAV ══════════════════════ -->
+<nav>
+  <div class="nav-logo">Prajjwal <span>Madaan</span></div>
+  <div class="nav-reg">IND · FPL · CPL CANDIDATE</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#academics">Academics</a></li>
+    <li><a href="#aviation">Aviation</a></li>
+    <li><a href="#achievements">Highlights</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="speed-tape"></div>
+  <div class="runway"><div class="rl"></div><div class="rl"></div><div class="rl"></div></div>
+  <div class="hero-horizon"></div>
+
+  <!-- Instrument strip right edge -->
+  <div class="hero-instr">
+    <div class="instr-item">ALT<span class="instr-val">FL350</span></div>
+    <div class="instr-item">IAS<span class="instr-val">450KT</span></div>
+    <div class="instr-item">HDG<span class="instr-val">090°</span></div>
+    <div class="instr-item">V/S<span class="instr-val">+000</span></div>
+    <div class="instr-item">COM<span class="instr-val">118.75</span></div>
+  </div>
+
+  <!-- HERO LEFT -->
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span class="hero-lbl">Cadet Pilot Candidate</span>
+    </div>
+    <h1 class="hero-name">Prajjwal<br/><em>Madaan</em></h1>
+    <div class="hero-title">Aspiring Commercial Airline Pilot</div>
+    <p class="hero-desc">
+      An academically distinguished, aviation-committed individual from India — driven by a lifelong passion for flight, disciplined preparation, and a clear ambition to serve on the flight deck of a commercial airliner.
+    </p>
+    <div class="hero-ctas">
+      <a href="#about" class="btn-p">↓ View Profile</a>
+      <a href="#" class="btn-o" onclick="alert('CV download — configure this link.');return false">Download CV</a>
+      <a href="#contact" class="btn-g">Contact</a>
+    </div>
+    <!-- Checklist-style micro-badges -->
+    <div class="hero-checks">
+      <div class="hcheck"><div class="hcheck-box"></div>DGCA Exams Cleared</div>
+      <div class="hcheck"><div class="hcheck-box"></div>State Athlete</div>
+      <div class="hcheck"><div class="hcheck-box"></div>93.8% Class XII</div>
+    </div>
+  </div>
+
+  <!-- HERO RIGHT — Pilot SVG -->
+  <div class="hero-right">
+    <div class="pilot-wrap">
+      <div class="pilot-glow"></div>
+
+      <!-- Cockpit gauge overlays -->
+      <div class="gauge g1">ALT<span class="gauge-val">35000 FT</span></div>
+      <div class="gauge g2">IAS<span class="gauge-val">450 KT</span></div>
+      <div class="gauge g3">HDG<span class="gauge-val">090°</span></div>
+      <div class="gauge g4">V/S<span class="gauge-val">±000</span></div>
+
+      <div class="pilot-float">
+        <svg width="260" height="360" viewBox="0 0 260 360" xmlns="http://www.w3.org/2000/svg">
+          <!-- Ground shadow -->
+          <ellipse cx="130" cy="346" rx="72" ry="14" fill="rgba(201,168,76,0.08)"/>
+
+          <!-- LEGS -->
+          <rect x="94" y="248" width="30" height="74" rx="8" fill="#1a2438"/>
+          <rect x="136" y="248" width="30" height="74" rx="8" fill="#1a2438"/>
+          <!-- Trouser crease -->
+          <line x1="109" y1="252" x2="109" y2="318" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="151" y1="252" x2="151" y2="318" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <!-- Shoes -->
+          <ellipse cx="109" cy="320" rx="18" ry="7" fill="#0e1420"/>
+          <ellipse cx="151" cy="320" rx="18" ry="7" fill="#0e1420"/>
+          <ellipse cx="113" cy="318" rx="10" ry="5" fill="#16202e"/>
+          <ellipse cx="155" cy="318" rx="10" ry="5" fill="#16202e"/>
+
+          <!-- TORSO / UNIFORM -->
+          <rect x="76" y="155" width="108" height="100" rx="14" fill="#1a2842"/>
+          <!-- Jacket lapels -->
+          <polygon points="130,162 112,175 118,240 130,238" fill="#152035"/>
+          <polygon points="130,162 148,175 142,240 130,238" fill="#152035"/>
+          <!-- Centre button line -->
+          <rect x="128" y="168" width="4" height="68" rx="1" fill="#0f1828"/>
+          <!-- Buttons -->
+          <circle cx="130" cy="178" r="2.5" fill="#2a3a55"/>
+          <circle cx="130" cy="192" r="2.5" fill="#2a3a55"/>
+          <circle cx="130" cy="206" r="2.5" fill="#2a3a55"/>
+          <!-- Pocket flaps -->
+          <rect x="86" y="185" width="22" height="10" rx="2" fill="#152035"/>
+          <rect x="152" y="185" width="22" height="10" rx="2" fill="#152035"/>
+
+          <!-- EPAULETTES -->
+          <rect x="76" y="157" width="26" height="10" rx="3" fill="#1e3050"/>
+          <rect x="158" y="157" width="26" height="10" rx="3" fill="#1e3050"/>
+          <!-- Four stripes (Captain) — gold -->
+          <rect x="80" y="159" width="16" height="2" rx="1" fill="#c9a84c" opacity="0.9"/>
+          <rect x="80" y="162.5" width="16" height="2" rx="1" fill="#c9a84c" opacity="0.75"/>
+          <rect x="80" y="166" width="16" height="1.5" rx="1" fill="#c9a84c" opacity="0.55"/>
+          <rect x="162" y="159" width="16" height="2" rx="1" fill="#c9a84c" opacity="0.9"/>
+          <rect x="162" y="162.5" width="16" height="2" rx="1" fill="#c9a84c" opacity="0.75"/>
+          <rect x="162" y="166" width="16" height="1.5" rx="1" fill="#c9a84c" opacity="0.55"/>
+
+          <!-- Tie -->
+          <polygon points="126,168 134,168 132,198 130,200 128,198" fill="#c9a84c" opacity="0.65"/>
+
+          <!-- ARMS -->
+          <rect x="48" y="162" width="30" height="72" rx="12" fill="#1a2842"/>
+          <rect x="182" y="162" width="30" height="72" rx="12" fill="#1a2842"/>
+          <!-- Sleeve cuff stripes -->
+          <rect x="50" y="224" width="26" height="2" rx="1" fill="#c9a84c" opacity="0.5"/>
+          <rect x="50" y="228" width="26" height="1.5" rx="1" fill="#c9a84c" opacity="0.35"/>
+          <rect x="184" y="224" width="26" height="2" rx="1" fill="#c9a84c" opacity="0.5"/>
+          <rect x="184" y="228" width="26" height="1.5" rx="1" fill="#c9a84c" opacity="0.35"/>
+
+          <!-- HANDS -->
+          <ellipse cx="63" cy="236" rx="13" ry="11" fill="#d4a882"/>
+          <ellipse cx="197" cy="236" rx="13" ry="11" fill="#d4a882"/>
+          <!-- Fingers suggestion -->
+          <rect x="54" y="236" width="6" height="10" rx="3" fill="#c49470"/>
+          <rect x="61" y="238" width="6" height="11" rx="3" fill="#c49470"/>
+          <rect x="68" y="237" width="6" height="10" rx="3" fill="#c49470"/>
+          <rect x="188" y="236" width="6" height="10" rx="3" fill="#c49470"/>
+          <rect x="195" y="238" width="6" height="11" rx="3" fill="#c49470"/>
+          <rect x="202" y="237" width="6" height="10" rx="3" fill="#c49470"/>
+
+          <!-- NECK -->
+          <rect x="117" y="138" width="26" height="22" rx="5" fill="#d4a882"/>
+
+          <!-- HEAD -->
+          <ellipse cx="130" cy="106" rx="50" ry="54" fill="#d4a882"/>
+          <!-- Ear -->
+          <ellipse cx="80" cy="104" rx="9" ry="13" fill="#c49470"/>
+          <ellipse cx="180" cy="104" rx="9" ry="13" fill="#c49470"/>
+          <!-- Ear canal suggestion -->
+          <ellipse cx="80" cy="104" rx="4" ry="6" fill="#b48060" opacity="0.6"/>
+          <ellipse cx="180" cy="104" rx="4" ry="6" fill="#b48060" opacity="0.6"/>
+
+          <!-- Eyes -->
+          <ellipse cx="112" cy="98" rx="10" ry="9" fill="white"/>
+          <ellipse cx="148" cy="98" rx="10" ry="9" fill="white"/>
+          <ellipse cx="113" cy="99" rx="6.5" ry="6.5" fill="#2c1e10"/>
+          <ellipse cx="149" cy="99" rx="6.5" ry="6.5" fill="#2c1e10"/>
+          <ellipse cx="114" cy="98" rx="3" ry="3" fill="#1a1008"/>
+          <ellipse cx="150" cy="98" rx="3" ry="3" fill="#1a1008"/>
+          <!-- Eye shine -->
+          <circle cx="116" cy="96.5" r="1.8" fill="white"/>
+          <circle cx="152" cy="96.5" r="1.8" fill="white"/>
+
+          <!-- Eyebrows — calm, confident -->
+          <path d="M102 86 Q112 82 122 85" fill="none" stroke="#5a3820" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M138 85 Q148 82 158 86" fill="none" stroke="#5a3820" stroke-width="2.8" stroke-linecap="round"/>
+
+          <!-- Nose -->
+          <ellipse cx="130" cy="110" rx="6" ry="7" fill="#c49470"/>
+          <path d="M125 115 Q130 118 135 115" fill="none" stroke="#b48060" stroke-width="1.2" stroke-linecap="round"/>
+
+          <!-- Slight confident smile -->
+          <path d="M116 122 Q130 130 144 122" fill="none" stroke="#a07050" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- PILOT CAP -->
+          <!-- Cap base -->
+          <ellipse cx="130" cy="64" rx="54" ry="20" fill="#1a2842"/>
+          <!-- Cap band -->
+          <rect x="76" y="52" width="108" height="16" rx="4" fill="#202e48"/>
+          <rect x="76" y="52" width="108" height="6" rx="3" fill="#1a2540"/>
+          <!-- Cap top -->
+          <ellipse cx="130" cy="50" rx="50" ry="16" fill="#1e2e4a"/>
+          <!-- Cap badge mount -->
+          <rect x="110" y="50" width="40" height="18" rx="3" fill="#202e48"/>
+          <!-- Cap badge — wings design -->
+          <ellipse cx="130" cy="58" rx="16" ry="8" fill="#253555"/>
+          <ellipse cx="130" cy="58" rx="8" ry="5" fill="#c9a84c" opacity="0.55"/>
+          <ellipse cx="130" cy="58" rx="4" ry="3" fill="#e8c97a" opacity="0.7"/>
+          <!-- Wing left -->
+          <path d="M114 58 Q120 53 126 57" fill="none" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <path d="M115 60 Q121 55.5 126 58.5" fill="none" stroke="#c9a84c" stroke-width=".8" opacity="0.4"/>
+          <!-- Wing right -->
+          <path d="M134 57 Q140 53 146 58" fill="none" stroke="#c9a84c" stroke-width="1.2" opacity="0.6"/>
+          <path d="M134 58.5 Q140 55.5 145 60" fill="none" stroke="#c9a84c" stroke-width=".8" opacity="0.4"/>
+          <!-- Cap visor -->
+          <path d="M76 68 Q130 80 184 68" fill="none" stroke="#0d1520" stroke-width="5"/>
+          <path d="M76 68 Q130 78 184 68" fill="none" stroke="#162030" stroke-width="3"/>
+          <!-- Visor shine -->
+          <path d="M90 71 Q110 74 130 72" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- HEADSET -->
+          <path d="M80 92 Q72 60 98 50" fill="none" stroke="#2a3a50" stroke-width="5.5" stroke-linecap="round"/>
+          <ellipse cx="77" cy="95" rx="10" ry="14" fill="#222c3c"/>
+          <ellipse cx="77" cy="95" rx="6" ry="9" fill="#1a2535"/>
+          <path d="M180 92 Q188 60 162 50" fill="none" stroke="#2a3a50" stroke-width="5.5" stroke-linecap="round"/>
+          <ellipse cx="183" cy="95" rx="10" ry="14" fill="#222c3c"/>
+          <ellipse cx="183" cy="95" rx="6" ry="9" fill="#1a2535"/>
+          <!-- Headset boom mic — left side -->
+          <path d="M67 106 Q58 115 62 128" fill="none" stroke="#2a3a50" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="62" cy="130" rx="4" ry="3" fill="#1e3050"/>
+          <!-- Teal mic indicator light -->
+          <circle cx="62" cy="130" r="2" fill="#00c9a9" opacity="0.7"/>
+
+          <!-- Subtle body glow -->
+          <ellipse cx="130" cy="106" rx="52" ry="56" fill="none" stroke="rgba(201,168,76,0.06)" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span class="scroll-txt">Scroll</span>
+  </div>
+</section>
+
+<!-- ══════════════════════ MARQUEE ══════════════════════ -->
+<div class="mq-wrap">
+  <div class="mq-track">
+    <!-- Set 1 -->
+    <span class="mqi gold">✈ Pilot Candidate</span><span class="mq-sep">◆</span>
+    <span class="mqi teal">DGCA Air Regulations — Cleared</span><span class="mq-sep">✦</span>
+    <span class="mqi">Aviation Meteorology</span><span class="mq-sep">◆</span>
+    <span class="mqi gold">93.8% Class XII</span><span class="mq-sep">✦</span>
+    <span class="mqi teal">⚑ State-Level Athlete</span><span class="mq-sep">◆</span>
+    <span class="mqi">Aerodynamics · Meteorology</span><span class="mq-sep">✦</span>
+    <span class="mqi gold">✈ Vice House Captain</span><span class="mq-sep">◆</span>
+    <span class="mqi teal">Commercial Aviation</span><span class="mq-sep">✦</span>
+    <span class="mqi">Physics · Mathematics · English</span><span class="mq-sep">◆</span>
+    <!-- Set 2 mirror -->
+    <span class="mqi gold">✈ Pilot Candidate</span><span class="mq-sep">◆</span>
+    <span class="mqi teal">DGCA Air Regulations — Cleared</span><span class="mq-sep">✦</span>
+    <span class="mqi">Aviation Meteorology</span><span class="mq-sep">◆</span>
+    <span class="mqi gold">93.8% Class XII</span><span class="mq-sep">✦</span>
+    <span class="mqi teal">⚑ State-Level Athlete</span><span class="mq-sep">◆</span>
+    <span class="mqi">Aerodynamics · Meteorology</span><span class="mq-sep">✦</span>
+    <span class="mqi gold">✈ Vice House Captain</span><span class="mq-sep">◆</span>
+    <span class="mqi teal">Commercial Aviation</span><span class="mq-sep">✦</span>
+    <span class="mqi">Physics · Mathematics · English</span><span class="mq-sep">◆</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ STATS ══════════════════════ -->
+<div class="stats-row">
+  <div class="stat-box r"><span class="stat-num" data-target-pct="93.8">0</span><span class="stat-lbl">Class XII Score</span></div>
+  <div class="stat-box r d1"><span class="stat-num" data-target-int="2">0</span><span class="stat-lbl">DGCA CPL Exams Cleared</span></div>
+  <div class="stat-box r d2"><span class="stat-num">State</span><span class="stat-lbl">Table Tennis Level</span></div>
+  <div class="stat-box r d3"><span class="stat-num" data-target-int="18">0</span><span class="stat-lbl">Age · Indian National</span></div>
+</div>
+
+<!-- ══════════════════════ ABOUT ══════════════════════ -->
+<section class="about-bg" id="about">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Professional Summary</div><h2 class="sec-title">About Me</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="about-grid">
+      <!-- LEFT: Cockpit-style profile card -->
+      <div class="about-profile-card r">
+        <div class="callsign-badge">
+          <div class="callsign-avatar">PM</div>
+          <div>
+            <div class="callsign-name">Prajjwal Madaan</div>
+            <div class="callsign-sub">// CPL Candidate · IND</div>
+          </div>
+        </div>
+        <div class="profile-rows">
+          <div class="profile-row">
+            <span class="pr-key">Nationality</span>
+            <span class="pr-val"><strong>Indian</strong></span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">Date of Birth</span>
+            <span class="pr-val">6 March 2008</span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">Location</span>
+            <span class="pr-val">Sonipat, Haryana</span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">Academic</span>
+            <span class="pr-val"><strong>93.8%</strong> Class XII</span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">DGCA Exams</span>
+            <span class="pr-val green"><strong>2 × Cleared</strong></span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">Sports</span>
+            <span class="pr-val">State TT · District Skating</span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">Leadership</span>
+            <span class="pr-val">Vice House Captain</span>
+          </div>
+          <div class="profile-row">
+            <span class="pr-key">Status</span>
+            <span class="pr-val green"><strong>Actively Preparing</strong></span>
+          </div>
+        </div>
+
+        <!-- Philosophy numbers -->
+        <div class="philosophy-row" style="margin-top:1.5rem">
+          <div class="phil-item">
+            <span class="phil-num">92%</span>
+            <span class="phil-lbl">Class X</span>
+          </div>
+          <div class="phil-item">
+            <span class="phil-num">2×</span>
+            <span class="phil-lbl">DGCA Cleared</span>
+          </div>
+          <div class="phil-item">
+            <span class="phil-num">18</span>
+            <span class="phil-lbl">Years Old</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Text summary -->
+      <div class="about-right r d2">
+        <p class="about-lead">
+          "The cockpit demands precision, calm, and an unwavering commitment to safety — values I have been building toward my entire life."
+        </p>
+        <div class="about-body">
+          <p>I am <strong>Prajjwal Madaan</strong>, an 18-year-old aspiring commercial airline pilot from Sonipat, Haryana. From an early age, aviation captured my imagination — and over time, that fascination has grown into a deliberate, methodical pursuit of a professional flying career.</p>
+          <p>I have successfully cleared two <strong>DGCA CPL-level examinations</strong> — Air Regulations and Aviation Meteorology — demonstrating both a thorough understanding of aviation fundamentals and the self-discipline to study at a level well beyond my current training stage.</p>
+          <p>My academic results in <strong>Physics and Mathematics</strong>, competitive achievements in table tennis at state level, and school leadership experience as Vice House Captain have each shaped the attributes I consider most critical in a future commercial pilot: analytical thinking, calm under pressure, and the ability to lead and communicate effectively.</p>
+          <p>I am driven by purpose, prepared through discipline, and committed to the professional standards that define excellence in commercial aviation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ ACADEMICS ══════════════════════ -->
+<section id="academics">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Education</div><h2 class="sec-title">Academic Excellence</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="score-grid r">
+      <div class="score-blk"><div class="score-pct">92%</div><div class="score-sub">Class X · CBSE</div><div class="score-name">Secondary School Examination</div></div>
+      <div class="score-blk"><div class="score-pct">93.8%</div><div class="score-sub">Class XII · CBSE</div><div class="score-name">Senior Secondary Examination</div></div>
+      <div class="score-blk"><div class="score-pct">PCM</div><div class="score-sub">Core Subjects</div><div class="score-name">Physics · Chemistry · Mathematics</div></div>
+    </div>
+    <div class="r d1">
+      <div class="sec-lbl" style="margin-bottom:.8rem">Academic Strengths</div>
+      <div class="subj-row">
+        <span class="subj-tag">Physics</span>
+        <span class="subj-tag">Mathematics</span>
+        <span class="subj-tag">English</span>
+        <span class="subj-tag">Analytical Reasoning</span>
+        <span class="subj-tag">Quantitative Problem-Solving</span>
+        <span class="subj-tag">Scientific Foundations</span>
+      </div>
+    </div>
+    <p class="r d2" style="max-width:600px;font-size:.86rem;color:var(--txt-m);line-height:1.92;margin-top:1.8rem;font-weight:300">
+      A strong grounding in Physics and Mathematics forms the intellectual backbone of aviation competence — from understanding aerodynamic principles to interpreting meteorological conditions and flight instruments with precision.
+    </p>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ AVIATION PREP ══════════════════════ -->
+<section style="background:var(--bg2)" id="aviation">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">DGCA Examinations</div><h2 class="sec-title">Aviation Preparation</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="cert-grid r">
+      <div class="cert-card">
+        <div class="cert-icon-wrap">📋</div>
+        <div class="cert-title">Air Regulations</div>
+        <div class="cert-body">Successfully cleared the DGCA CPL Air Regulations examination — covering India's civil aviation regulatory framework, ICAO standards, pilot licensing requirements, airspace classifications, and the rules governing safe flight operations in controlled and uncontrolled environments.</div>
+        <div class="cert-badge">✓ DGCA CPL Level · Cleared</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon-wrap">🌤</div>
+        <div class="cert-title">Aviation Meteorology</div>
+        <div class="cert-body">Successfully cleared the DGCA CPL Aviation Meteorology examination — covering atmospheric physics, pressure systems, cloud formations, icing conditions, thunderstorm avoidance, TAF/METAR interpretation, and weather phenomena that directly impact flight safety and decision-making.</div>
+        <div class="cert-badge">✓ DGCA CPL Level · Cleared</div>
+      </div>
+    </div>
+
+    <!-- Exam data panel -->
+    <div class="exam-panel r d2">
+      <div class="ep-item"><span class="ep-val">DGCA</span><span class="ep-lbl">Issuing Authority</span></div>
+      <div class="ep-item"><span class="ep-val">CPL</span><span class="ep-lbl">Examination Level</span></div>
+      <div class="ep-item"><span class="ep-val">2 / 7</span><span class="ep-lbl">Subjects Completed</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ HIGHLIGHTS ══════════════════════ -->
+<section id="achievements">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Highlights</div><h2 class="sec-title">Leadership & Sports</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="hl-grid">
+      <div class="hl-card r">
+        <span class="hl-icon">🏫</span>
+        <div class="hl-title">Vice House Captain</div>
+        <div class="hl-desc">Served as Vice House Captain in Class X — a position demanding organisational leadership, clear communication, and the ability to coordinate and motivate peers toward shared institutional goals.</div>
+      </div>
+      <div class="hl-card r d1">
+        <span class="hl-icon">🏓</span>
+        <div class="hl-title">State-Level Table Tennis</div>
+        <div class="hl-desc">Competed at state level in table tennis — developing extraordinary reflexes, spatial awareness, composure under competitive pressure, and hand-eye coordination that translates directly to cockpit performance.</div>
+      </div>
+      <div class="hl-card r d2">
+        <span class="hl-icon">⛸</span>
+        <div class="hl-title">District-Level Roller Skating</div>
+        <div class="hl-desc">Achieved district-level recognition in roller skating — building balance, sustained physical discipline, endurance, and the competitive mindset that underpins consistent performance in demanding environments.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ PILOT PANEL ══════════════════════ -->
+<section class="pilot-panel-bg" id="pilotpanel">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Candidate Profile</div><h2 class="sec-title">Flight Deck Readiness</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="pilot-panel r">
+      <div class="pp-header">
+        <span class="pp-title">CANDIDATE DATA · PRAJJWAL MADAAN</span>
+        <div class="pp-status"><div class="pp-dot"></div>ACTIVELY PREPARING</div>
+      </div>
+      <div class="pp-grid">
+        <div class="pp-cell">
+          <div class="pp-cell-top">Situational Awareness</div>
+          <div class="pp-cell-val gold">HIGH</div>
+          <div class="pp-cell-sub">Sports + Academics</div>
+        </div>
+        <div class="pp-cell">
+          <div class="pp-cell-top">Composure Under Pressure</div>
+          <div class="pp-cell-val teal">STRONG</div>
+          <div class="pp-cell-sub">State Competition</div>
+        </div>
+        <div class="pp-cell">
+          <div class="pp-cell-top">Analytical Ability</div>
+          <div class="pp-cell-val gold">VERIFIED</div>
+          <div class="pp-cell-sub">93.8% PCM</div>
+        </div>
+        <div class="pp-cell">
+          <div class="pp-cell-top">Regulatory Knowledge</div>
+          <div class="pp-cell-val teal">CPL LVL</div>
+          <div class="pp-cell-sub">DGCA Cleared</div>
+        </div>
+      </div>
+      <div class="pp-row2">
+        <div class="pp-row2-cell">
+          <span class="pp-r2-icon">📡</span>
+          <div><div class="pp-r2-key">Communication</div><div class="pp-r2-val">English — Professional proficiency, precise &amp; concise</div></div>
+        </div>
+        <div class="pp-row2-cell">
+          <span class="pp-r2-icon">🛡</span>
+          <div><div class="pp-r2-key">Safety Mindset</div><div class="pp-r2-val">SOP-compliant approach to risk, checklists &amp; regulations</div></div>
+        </div>
+        <div class="pp-row2-cell">
+          <span class="pp-r2-icon">👥</span>
+          <div><div class="pp-r2-key">Crew Resource Management</div><div class="pp-r2-val">Team leadership, peer coordination, institutional trust</div></div>
+        </div>
+        <div class="pp-row2-cell">
+          <span class="pp-r2-icon">🧭</span>
+          <div><div class="pp-r2-key">Discipline &amp; Focus</div><div class="pp-r2-val">Consistent academic &amp; athletic performance across years</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ SKILLS ACCORDION ══════════════════════ -->
+<section class="skills-bg" id="skills">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Core Competencies</div><h2 class="sec-title">Pilot Attributes</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="accordion r">
+
+      <div class="acc-item">
+        <div class="acc-hdr" onclick="toggleAcc(this)">
+          <div class="acc-left"><span class="acc-num">01</span><span class="acc-name">Situational Awareness</span></div>
+          <div class="acc-right"><div class="acc-tags"><span class="acc-tag">Decision-Making</span><span class="acc-tag">Pressure</span></div><span class="acc-plus">+</span></div>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">Trained through <strong>competitive sport and rigorous academic environments</strong> to assess evolving situations accurately and maintain a reliable mental model under dynamic conditions. Situational awareness — the ability to anticipate, not merely react — is the foundational skill of safe aviation.</div></div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-hdr" onclick="toggleAcc(this)">
+          <div class="acc-left"><span class="acc-num">02</span><span class="acc-name">Analytical Thinking</span></div>
+          <div class="acc-right"><div class="acc-tags"><span class="acc-tag">Physics</span><span class="acc-tag">Mathematics</span></div><span class="acc-plus">+</span></div>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">A strong academic foundation in <strong>Physics and Mathematics</strong> has cultivated the ability to evaluate complex information systematically and derive sound, evidence-based conclusions — essential for flight planning, emergency analysis, and navigational problem-solving.</div></div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-hdr" onclick="toggleAcc(this)">
+          <div class="acc-left"><span class="acc-num">03</span><span class="acc-name">Calm Under Pressure</span></div>
+          <div class="acc-right"><div class="acc-tags"><span class="acc-tag">Sports</span><span class="acc-tag">Leadership</span></div><span class="acc-plus">+</span></div>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">Forged through <strong>state-level competition and school leadership</strong> — a temperament naturally oriented toward clarity and steadiness when stakes are highest. The ability to remain structured and decisive under pressure is among the most critical qualities in a commercial flight crew member.</div></div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-hdr" onclick="toggleAcc(this)">
+          <div class="acc-left"><span class="acc-num">04</span><span class="acc-name">Teamwork & Communication</span></div>
+          <div class="acc-right"><div class="acc-tags"><span class="acc-tag">CRM</span><span class="acc-tag">English</span></div><span class="acc-plus">+</span></div>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">Experienced in collaborative environments through <strong>team sports and institutional leadership roles</strong>. Clear, precise, professional communication in English — the language of aviation — underpins every dimension of cockpit resource management, ATC interaction, and cabin crew coordination.</div></div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-hdr" onclick="toggleAcc(this)">
+          <div class="acc-left"><span class="acc-num">05</span><span class="acc-name">Safety-First Mindset</span></div>
+          <div class="acc-right"><div class="acc-tags"><span class="acc-tag">Regulations</span><span class="acc-tag">Meteorology</span></div><span class="acc-plus">+</span></div>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">A genuine, internalised respect for protocols, checklists, SOPs, and risk mitigation — not as bureaucratic requirement, but as professional identity. Reinforced through <strong>DGCA CPL-level study</strong> in Air Regulations and Aviation Meteorology, building both knowledge and attitude.</div></div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-hdr" onclick="toggleAcc(this)">
+          <div class="acc-left"><span class="acc-num">06</span><span class="acc-name">Discipline & Time Management</span></div>
+          <div class="acc-right"><div class="acc-tags"><span class="acc-tag">Consistency</span><span class="acc-tag">Focus</span></div><span class="acc-plus">+</span></div>
+        </div>
+        <div class="acc-body"><div class="acc-body-inner">Demonstrated through <strong>consistently high academic results</strong>, self-directed DGCA exam preparation alongside regular schooling, and the sustained commitment required to compete at state and district athletic levels simultaneously. Calm, consistent execution under multiple concurrent demands.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ INTERESTS ══════════════════════ -->
+<section id="interests">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Areas of Passion</div><h2 class="sec-title">Aviation Interests</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="int-wrap r">
+      <div class="int-pill">✈ Aircraft Systems</div>
+      <div class="int-pill">🌬 Aerodynamics</div>
+      <div class="int-pill">🛫 Airline Operations</div>
+      <div class="int-pill">⚠ Aviation Safety</div>
+      <div class="int-pill">🌤 Meteorology</div>
+      <div class="int-pill">🌏 Commercial Aviation</div>
+      <div class="int-pill">🎓 Flight Training</div>
+      <div class="int-pill">🧭 Navigation</div>
+      <div class="int-pill">📡 Air Traffic Management</div>
+      <div class="int-pill">🔧 Pilot Professionalism</div>
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ DIGITAL ══════════════════════ -->
+<section style="background:var(--bg2)" id="additional">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Digital Presence</div><h2 class="sec-title">Creative Pursuits</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="digital-wrap r">
+      <div>
+        <span class="digital-icon">🎵</span>
+        <div class="digital-lbl">Content Creation</div>
+      </div>
+      <div>
+        <h3 class="digital-title">Ambient Music Channel</h3>
+        <p class="digital-desc">I manage a YouTube channel dedicated to calm, ambient, and atmospheric music — a creative project reflecting my appreciation for precision, atmosphere, and sustained concentration. It has developed skills in consistent content curation, aesthetic judgement, digital media management, and audience building through quality over volume.</p>
+        <p class="digital-desc" style="margin-top:.65rem">This project reflects the same disciplined, calm-focused mindset I bring to aviation preparation — the ability to sustain attention, maintain standards, and deliver a refined output consistently over time.</p>
+        <div class="digital-tags">
+          <span class="dtag">Content Strategy</span>
+          <span class="dtag">Creative Direction</span>
+          <span class="dtag">Consistency</span>
+          <span class="dtag">Calm Aesthetic</span>
+          <span class="dtag">Digital Media</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="dvd"></div>
+
+<!-- ══════════════════════ CONTACT ══════════════════════ -->
+<section id="contact">
+  <div class="sec-inner">
+    <div class="sec-hdr r">
+      <div><div class="sec-lbl">Get In Touch</div><h2 class="sec-title">Contact</h2></div>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro r">Ready to Join<br/><em>Your Crew</em></p>
+        <p class="contact-sub r d1">Open to connections with aviation recruiters, cadet programme representatives, and industry professionals. I welcome any enquiry regarding my candidature as an aspiring commercial airline pilot.</p>
+        <div class="contact-ctas r d2">
+          <a href="https://www.linkedin.com/in/prajjwal-madaan/" class="btn-p" target="_blank">LinkedIn Profile</a>
+          <a href="#" class="btn-o" onclick="alert('CV download — configure this link.');return false">Download CV</a>
+        </div>
+      </div>
+      <div class="contact-items r d1">
+        <a href="mailto:prajjwalmadaan@gmail.com" class="ci">
+          <div class="ci-icon">✉</div>
+          <div><div class="ci-lbl">Email</div><div class="ci-val">prajjwalmadaan@gmail.com</div></div>
+        </a>
+        <a href="https://www.linkedin.com/in/prajjwal-madaan/" class="ci">
+          <div class="ci-icon">in</div>
+          <div><div class="ci-lbl">LinkedIn</div><div class="ci-val">linkedin.com/in/prajjwal-madaan</div></div>
+        </a>
+        <div class="ci" style="cursor:default">
+          <div class="ci-icon">📍</div>
+          <div><div class="ci-lbl">Location</div><div class="ci-val">Sonipat, Haryana, India</div></div>
+        </div>
+        <div class="ci" style="cursor:default">
+          <div class="ci-icon">🌐</div>
+          <div><div class="ci-lbl">Nationality · DOB</div><div class="ci-val">Indian · 6 March 2008</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <div class="ft-l"><strong>Prajjwal Madaan</strong> · Aspiring Commercial Airline Pilot · India</div>
+  <div class="ft-r">"Precision. Composure. Purpose."</div>
+</footer>
+
+<script>
+/* ── Cursor ── */
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.acc-hdr,.int-pill,.subj-tag,.pp-cell,.hl-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.transform = 'translate(-50%,-50%) scale(2.5)';
+    cur.style.background = 'var(--gold)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.transform = 'translate(-50%,-50%) scale(1)';
+    cur.style.background = 'var(--teal-l)';
+  });
+});
+
+/* ── Scroll reveal ── */
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('v'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -35px 0px' });
+document.querySelectorAll('.r').forEach(el => revObs.observe(el));
+
+/* ── Animated counters ── */
+function animCount(el) {
+  const pct = el.dataset.targetPct;
+  const int = el.dataset.targetInt;
+  if (!pct && !int) return;
+  const target = parseFloat(pct || int);
+  const isFloat = !!pct;
+  const suffix  = pct ? '%' : '';
+  const dur = 1800, start = performance.now();
+  (function step(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = isFloat ? (e * target).toFixed(1) + suffix : Math.floor(e * target) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  })(start);
+}
+const cntObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animCount(e.target); cntObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-target-pct],[data-target-int]').forEach(el => cntObs.observe(el));
+
+/* ── Accordion ── */
+function toggleAcc(hdr) {
+  const item  = hdr.closest('.acc-item');
+  const body  = item.querySelector('.acc-body');
+  const inner = item.querySelector('.acc-body-inner');
+  const open  = item.classList.contains('open');
+  document.querySelectorAll('.acc-item.open').forEach(i => {
+    i.classList.remove('open');
+    i.querySelector('.acc-body').style.maxHeight = '0';
+  });
+  if (!open) {
+    item.classList.add('open');
+    body.style.maxHeight = inner.scrollHeight + 48 + 'px';
+  }
+}
+
+/* ── Nav border on scroll ── */
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.borderBottomColor =
+    window.scrollY > 60 ? 'rgba(201,168,76,.22)' : 'rgba(201,168,76,.13)';
+}, { passive: true });
+</script>
+</body>
+</html>
